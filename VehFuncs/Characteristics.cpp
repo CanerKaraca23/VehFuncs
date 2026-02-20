@@ -545,14 +545,14 @@ void SetCharacteristicsForIndieHandling(CVehicle * vehicle, bool bReSearch)
 		if (xdata.doubleExhaust >= 0) 
 		{
 			if (useLog) lg << "'Double Exhaust' changed to " << (int)xdata.doubleExhaust << "\n";
-			vehicle->m_pHandlingData->m_nModelFlags.m_bDoubleExhaust = xdata.doubleExhaust;
+			vehicle->m_pHandlingData->m_bDoubleExhaust = xdata.doubleExhaust;
 		}
 
 		// Swinging chassis
 		if (xdata.swingingChassis >= 0)
 		{
 			vehicle->m_nHandlingFlags.bSwingingChassis = xdata.swingingChassis;
-			vehicle->m_pHandlingData->m_nHandlingFlags.m_bSwingingChassis = xdata.swingingChassis;
+			vehicle->m_pHandlingData->m_bSwingingChassis = xdata.swingingChassis;
 			CAutomobile *automobile = reinterpret_cast<CAutomobile*>(vehicle);
 			if (xdata.swingingChassis == 1) {
 				// ref 6B0F3B

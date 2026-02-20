@@ -83,7 +83,9 @@ namespace injectorAddons{
 		};
 
 		// Does the actual MakeInline
-		return MakeInlineAutoCallOriginal<Caps>(injector::memory_pointer_tr(at), injector::memory_pointer_tr(end));
+		uintptr_t addr_at = at;
+		uintptr_t addr_end = end;
+		return MakeInlineAutoCallOriginal<Caps>(injector::memory_pointer_tr(addr_at), injector::memory_pointer_tr(addr_end));
 	}
 
 	template<class FuncT>

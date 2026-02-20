@@ -1873,7 +1873,7 @@ public:
 						reinterpret_cast<CAutomobile*>(vehicle)->m_swingingChassis.m_nDoorState = eDoorState::DOOR_NOTHING;
 						CVisibilityPlugins::SetFrameHierarchyId(frame, 1);
 						// some peoples uses 'body' instead of 'chassis' to disable it without changing the handling flag
-						vehicle->m_pHandlingData->m_nHandlingFlags.m_bSwingingChassis = false;
+						vehicle->m_pHandlingData->m_bSwingingChassis = false;
 						vehicle->m_nHandlingFlags.bSwingingChassis = false;
 						if (useLog) lg << "Error fixed: Using '" << name << "' as chassis for vehicle id " << vehicle->m_nModelIndex << "\n";
 						noChassis = false;
