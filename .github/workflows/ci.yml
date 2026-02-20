@@ -23,7 +23,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: DK22Pac/plugin-sdk
-          ref: e77220b631ed7a4531306aa4e527003cf1b8e5ee
           path: plugin-sdk
 
       - name: Setup MSBuild
