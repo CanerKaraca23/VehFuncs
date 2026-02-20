@@ -2,53 +2,7 @@
 #ifndef INJECTOR_HAS_INJECTORADDONS_HPP
 #define INJECTOR_HAS_INJECTORADDONS_HPP
 
-namespace injector
-{
-	struct reg_pack
-	{
-		// The ordering is very important, don't change
-		// The first field is the last to be pushed and first to be poped
-
-		// PUSHFD / POPFD
-		uint32_t ef;
-
-		// PUSHAD/POPAD -- must be the lastest fields (because of esp)
-		union
-		{
-			uint32_t arr[8];
-			struct { uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax; };
-		};
-
-		enum reg_name {
-			reg_edi, reg_esi, reg_ebp, reg_esp, reg_ebx, reg_edx, reg_ecx, reg_eax
-		};
-
-		enum ef_flag {
-			carry_flag = 0, parity_flag = 2, adjust_flag = 4, zero_flag = 6, sign_flag = 7,
-			direction_flag = 10, overflow_flag = 11
-		};
-
-		uint32_t& operator[](size_t i)
-		{
-			return this->arr[i];
-		}
-		const uint32_t& operator[](size_t i) const
-		{
-			return this->arr[i];
-		}
-
-		template<uint32_t bit>   // bit starts from 0, use ef_flag enum
-		bool flag()
-		{
-			return (this->ef & (1 << bit)) != 0;
-		}
-
-		bool jnb()
-		{
-			return flag<carry_flag>() == false;
-		}
-	};
-}
+// reg_pack is now provided by plugin-sdk (injector/assembly.hpp)
 
 namespace injectorAddons{
 	namespace injectorAddons_asm
