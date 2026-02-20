@@ -119,7 +119,7 @@ void FindVehicleCharacteristicsFromNode(RwFrame * frame, CVehicle * vehicle, boo
 				srand((xdata.randomSeed + xdata.randomSeedUsage));
 				xdata.randomSeedUsage++;
 
-				int rand = RandomNumberInRange(0, (driverList.size() - 1));
+				int rand = RandomNumberInRange<int>(0, static_cast<int>(driverList.size() - 1));
 
 				list<int>::iterator it = driverList.begin();
 				advance(it, rand);
@@ -435,7 +435,7 @@ void SetCharacteristicsInRender(CVehicle * vehicle, bool bReSearch)
 							srand((xdata.randomSeed + xdata.randomSeedUsage));
 							xdata.randomSeedUsage++;
 
-							int rand = RandomNumberInRange(0, (xdata.occupantsModels.size() - 1));
+							int rand = RandomNumberInRange<int>(0, static_cast<int>(xdata.occupantsModels.size() - 1));
 
 							list<int>::iterator it = xdata.occupantsModels.begin();
 							advance(it, rand);
@@ -488,7 +488,7 @@ void SetCharacteristicsInRender(CVehicle * vehicle, bool bReSearch)
 							int model = 0;
 							int tries = 0;
 							do {
-								int rand = RandomNumberInRange(0, (xdata.occupantsModels.size() - 1));
+								int rand = RandomNumberInRange<int>(0, static_cast<int>(xdata.occupantsModels.size() - 1));
 
 								list<int>::iterator it = xdata.occupantsModels.begin();
 								advance(it, rand);

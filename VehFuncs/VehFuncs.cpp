@@ -1000,7 +1000,7 @@ public:
 
 				int backfire = sz_Ext_GetVehicleDoingBackfire(vehicle);
 				if (backfire > 0) {
-					bool isDoubleExhaust = vehicle->m_pHandlingData->m_nModelFlags.m_bDoubleExhaust;
+					bool isDoubleExhaust = vehicle->m_pHandlingData->m_bDoubleExhaust;
 					if (xdata.flags.bBackfireIsUpdated == false)
 					{
 						xdata.flags.bBackfireIsUpdated = true;
