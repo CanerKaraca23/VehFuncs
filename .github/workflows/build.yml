@@ -34,7 +34,7 @@ jobs:
       shell: cmd
       env:
         PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
-      run: msbuild plugin-sdk\plugin.sln /p:Configuration="Release" /p:Platform="x86"
+      run: msbuild plugin-sdk\plugin.sln /p:Configuration="Release"
 
     - name: Move Soundize
       shell: cmd
