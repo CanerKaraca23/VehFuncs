@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Checkout plugin-sdk
+      uses: actions/checkout@v4
+      with:
+        repository: DK22Pac/plugin-sdk
+        path: plugin-sdk
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Generate plugin-sdk solution
+      shell: cmd
+      env:
+        PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
+      run: |
+        cd plugin-sdk\tools\premake
+        premake5.exe vs2022
+
+    - name: Build plugin-sdk
+      shell: cmd
+      env:
+        PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
+      run: msbuild plugin-sdk\plugin.sln /p:Configuration="Release" /p:Platform="Win32"
+
+    - name: Move Soundize
+      shell: cmd
+      run: move VehFuncs\Soundize Soundize
+
+    - name: Build VehFuncs
+      shell: cmd
+      env:
+        PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
+      run: msbuild VehFuncs.sln /p:Configuration="GTASA Release" /p:Platform="Win32" /p:OutDir="${{ github.workspace }}\bin\\"
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: VehFuncs.asi
+        path: bin/VehFuncs.asi
