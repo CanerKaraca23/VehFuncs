@@ -44,7 +44,7 @@ jobs:
       shell: cmd
       env:
         PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
-      run: msbuild VehFuncs.sln /p:Configuration="GTASA Release" /p:Platform="x86" /p:OutDir="${{ github.workspace }}\bin\\"
+      run: msbuild VehFuncs\VehFuncs.vcxproj /p:Configuration="GTASA Release" /p:Platform="Win32" /p:OutDir="${{ github.workspace }}\bin\\"
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
