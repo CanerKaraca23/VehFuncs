@@ -19,10 +19,23 @@ jobs:
         repository: DK22Pac/plugin-sdk
         path: plugin-sdk
 
+    - name: Get plugin-sdk hash
+      id: plugin-sdk-hash
+      shell: pwsh
+      run: echo "hash=$(git -C plugin-sdk rev-parse HEAD)" >> $env:GITHUB_OUTPUT
+
+    - name: Cache plugin-sdk
+      id: cache-plugin-sdk
+      uses: actions/cache@v4
+      with:
+        path: plugin-sdk
+        key: plugin-sdk-${{ runner.os }}-${{ steps.plugin-sdk-hash.outputs.hash }}
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
     - name: Generate plugin-sdk solution
+      if: steps.cache-plugin-sdk.outputs.cache-hit != 'true'
       shell: cmd
       env:
         PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
@@ -31,6 +44,7 @@ jobs:
         premake5.exe vs2022
 
     - name: Build plugin-sdk
+      if: steps.cache-plugin-sdk.outputs.cache-hit != 'true'
       shell: cmd
       env:
         PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
