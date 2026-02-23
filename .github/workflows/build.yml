@@ -1,67 +1,53 @@
-name: Build
+name: CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [master]
   pull_request:
-    branches: [ "master" ]
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Build
+    runs-on: windows-2022
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout VehFuncs
+        uses: actions/checkout@v4
 
-    - name: Checkout plugin-sdk
-      uses: actions/checkout@v4
-      with:
-        repository: DK22Pac/plugin-sdk
-        path: plugin-sdk
+      - name: Checkout plugin-sdk
+        uses: actions/checkout@v4
+        with:
+          repository: DK22Pac/plugin-sdk
+          path: plugin-sdk
 
-    - name: Get plugin-sdk hash
-      id: plugin-sdk-hash
-      shell: pwsh
-      run: echo "hash=$(git -C plugin-sdk rev-parse HEAD)" >> $env:GITHUB_OUTPUT
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-    - name: Cache plugin-sdk
-      id: cache-plugin-sdk
-      uses: actions/cache@v4
-      with:
-        path: plugin-sdk
-        key: plugin-sdk-${{ runner.os }}-${{ steps.plugin-sdk-hash.outputs.hash }}
+      - name: Generate plugin-sdk project
+        shell: cmd
+        run: |
+          set PLUGIN_SDK_DIR=%GITHUB_WORKSPACE%\plugin-sdk
+          "%PLUGIN_SDK_DIR%\tools\premake\premake5" vs2022 --file="%PLUGIN_SDK_DIR%\tools\premake\premake5.lua"
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
+      - name: Build plugin-sdk
+        shell: cmd
+        run: |
+          set PLUGIN_SDK_DIR=%GITHUB_WORKSPACE%\plugin-sdk
+          msbuild "%PLUGIN_SDK_DIR%\plugin.sln" /p:Configuration=Release /p:Platform="Mixed Platforms" /t:plugin_sa /m
 
-    - name: Generate plugin-sdk solution
-      if: steps.cache-plugin-sdk.outputs.cache-hit != 'true'
-      shell: cmd
-      env:
-        PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
-      run: |
-        cd plugin-sdk\tools\premake
-        premake5.exe vs2022
+      - name: Build VehFuncs
+        shell: cmd
+        run: |
+          set PLUGIN_SDK_DIR=%GITHUB_WORKSPACE%\plugin-sdk
+          msbuild VehFuncs.sln /p:Configuration="GTASA Release" /p:Platform=x86 /p:OutDir=%GITHUB_WORKSPACE%\output\ /m
 
-    - name: Build plugin-sdk
-      if: steps.cache-plugin-sdk.outputs.cache-hit != 'true'
-      shell: cmd
-      env:
-        PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
-      run: msbuild plugin-sdk\plugin.sln /p:Configuration="Release"
-
-    - name: Copy Soundize
-      shell: cmd
-      run: xcopy VehFuncs\Soundize Soundize /E /I
-
-    - name: Build VehFuncs
-      shell: cmd
-      env:
-        PLUGIN_SDK_DIR: ${{ github.workspace }}\plugin-sdk
-      run: msbuild VehFuncs\VehFuncs.vcxproj /p:Configuration="GTASA Release" /p:Platform="Win32" /p:SolutionDir="${{ github.workspace }}\" /p:OutDir="${{ github.workspace }}\bin\\"
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: VehFuncs.asi
-        path: bin/VehFuncs.asi
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VehFuncs
+          path: output/VehFuncs.asi
