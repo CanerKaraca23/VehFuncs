@@ -1,6 +1,4 @@
 #pragma once
-#define RW
-#include "RenderWare.h"
 #include "plugin.h"
 #include "MatrixBackup.h"
 #include <time.h>

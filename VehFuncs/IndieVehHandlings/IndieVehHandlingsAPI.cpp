@@ -1,5 +1,3 @@
-#define RW
-#include "RenderWare.h"
 #include <game_sa\cHandlingDataMgr.h>
 #include "IndieVehHandlingsAPI.h"
 #include <bitset>

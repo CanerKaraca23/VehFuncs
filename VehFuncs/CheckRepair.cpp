@@ -8,8 +8,6 @@
 // CURRENTLY NOT USED
 // CURRENTLY NOT USED
 
-#define RW
-#include "RenderWare.h"
 #include "plugin.h"
 #include "VehFuncsCommon.h"
 #include "CheckRepair.h"
