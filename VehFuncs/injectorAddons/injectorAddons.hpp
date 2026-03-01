@@ -67,27 +67,6 @@ namespace injectorAddons{
 
 
 
-	template<uintptr_t at, uintptr_t end, class FuncT>
-	void MakeInlineAutoCallOriginal(FuncT func)
-	{
-		static FuncT static_func = func;    // Stores the func object
-		memcpy(&static_func, &func, sizeof(FuncT));                 //
-
-		// Encapsulates the call to static_func
-		struct Caps
-		{
-			void operator()(injector::reg_pack& regs)
-			{
-				static_func(regs);
-			}
-		};
-
-		// Does the actual MakeInline
-		uintptr_t addr_at = at;
-		uintptr_t addr_end = end;
-		return MakeInlineAutoCallOriginal<Caps>(injector::memory_pointer_tr(addr_at), injector::memory_pointer_tr(addr_end));
-	}
-
 	template<class FuncT>
 	void MakeInlineAutoCallOriginal(injector::memory_pointer_tr at)
 	{
@@ -116,6 +95,27 @@ namespace injectorAddons{
 	{
 		//injector::MakeRangedNOP(at, end);
 		MakeInlineAutoCallOriginal<FuncT>(at);
+	}
+
+	template<uintptr_t at, uintptr_t end, class FuncT>
+	void MakeInlineAutoCallOriginal(FuncT func)
+	{
+		static FuncT static_func = func;    // Stores the func object
+		memcpy(&static_func, &func, sizeof(FuncT));                 //
+
+		// Encapsulates the call to static_func
+		struct Caps
+		{
+			void operator()(injector::reg_pack& regs)
+			{
+				static_func(regs);
+			}
+		};
+
+		// Does the actual MakeInline
+		uintptr_t addr_at = at;
+		uintptr_t addr_end = end;
+		return MakeInlineAutoCallOriginal<Caps>(injector::memory_pointer_tr(addr_at), injector::memory_pointer_tr(addr_end));
 	}
 
 	template<uintptr_t at, class FuncT>
