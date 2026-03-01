@@ -1,3 +1,5 @@
+#define RW
+#include "RenderWare.h"
 #include "plugin.h"
 #include "CStreaming.h"
 
