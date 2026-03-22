@@ -1,14 +1,9 @@
-name: CI
+name: VehFuncs Build
 
 on:
   push:
-    branches: [master]
+    branches: master
   pull_request:
-    branches: [master]
-  workflow_dispatch:
-
-permissions:
-  contents: read
 
 jobs:
   build:
