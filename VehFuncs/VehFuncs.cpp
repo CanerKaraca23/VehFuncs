@@ -1104,6 +1104,7 @@ public:
 								}
 								if (!hasMEexhaust && (exhaustPos.x != 0.0f || exhaustPos.y != 0.0f || exhaustPos.z != 0.0f))
 								{
+									int i = 0;
 									int totalExhausts = 1 + (int)isDoubleExhaust;
 
 									for (int i = 0; i < totalExhausts; i++)
