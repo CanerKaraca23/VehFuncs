@@ -1,4 +1,4 @@
-﻿/*
+/*
     Author: Junior_Djjr - MixMods.com.br
     Created using https://github.com/DK22Pac/plugin-sdk
 */
@@ -864,7 +864,7 @@ public:
 				if (xdata.kms == -1.0f)
 				{
 					float factorA = Random(5000.0f, 300000.0f);
-					if (vehicle->m_nVehicleFlags.bIsDamaged) factorA *= 2.0f;
+					if (vehicle->bIsDamaged) factorA *= 2.0f;
 					float factorB = Random(0.0f, vehicle->m_fDirtLevel * 20000.0f);
 					xdata.kms = (factorA + factorB) * 40.0f;
 					//if (useLog) lg << (int)xdata.kms << ".\n";
@@ -1020,7 +1020,7 @@ public:
 					if (xdata.smoothBrakePedal < 0.0f) xdata.smoothBrakePedal = 0.0f;
 				}
 			}
-			if (!vehicle->m_nVehicleFlags.bEngineOn) {
+			if (!vehicle->bEngineOn) {
 				for (int i = 0; i < 2; i++)
 				{
 					// this way will not just save memory but mainly keep adapted for Tuning Mod exhaust position updates
@@ -1056,7 +1056,7 @@ public:
 						isDoubleExhaust = true;
 					}
 					else {
-						isDoubleExhaust = vehicle->m_pHandlingData->m_nModelFlags.m_bDoubleExhaust;
+						isDoubleExhaust = vehicle->m_pHandlingData->m_bDoubleExhaust;
 					}
 
 					if (xdata.flags.bBackfireIsUpdated == false)
@@ -1070,7 +1070,7 @@ public:
 							RwMatrix* vehicleMatrix = (RwMatrix*)vehicle->m_matrix;
 
 							if (vehicle->m_nModelIndex == eModelID::MODEL_NRG500 && (vehicleExtra0 == 0 || vehicleExtra0 == 1)) {
-								exhaustPosAdditional = GetVehicleDummyPosAdapted(vehicle, 11)->ToRwV3d();
+								exhaustPosAdditional = *(RwV3d*)GetVehicleDummyPosAdapted(vehicle, 11);
 								useAdditionalExhaustPos = true;
 							}
 
@@ -1079,13 +1079,13 @@ public:
 							exhaustPos.y = resultDummyPos->y;
 							exhaustPos.z = resultDummyPos->z;
 
-							FxSystemBP_c* blueprint = g_fxMan.FindFxSystemBP("backfire");
+							FxSystemBP_c* blueprint = g_fxMan.FindFxSystemBP(const_cast<char*>("backfire"));
 							if (blueprint == nullptr)
 							{
-								blueprint = g_fxMan.FindFxSystemBP("gunflash");
+								blueprint = g_fxMan.FindFxSystemBP(const_cast<char*>("gunflash"));
 							}
 
-							FxSystemBP_c* blueprintHigh = g_fxMan.FindFxSystemBP("backfire_high"); 
+							FxSystemBP_c* blueprintHigh = g_fxMan.FindFxSystemBP(const_cast<char*>("backfire_high")); 
 							if (blueprintHigh == nullptr)
 							{
 								blueprintHigh = blueprint;
@@ -1213,7 +1213,7 @@ public:
 			// Process material stuff (before render)
 			if (xdata.taxiSignMaterial)
 			{
-				if (reinterpret_cast<CAutomobile*>(vehicle)->taxiAvaliable & 1)
+				if (reinterpret_cast<CAutomobile*>(vehicle)->m_nAutomobileFlags.bTaxiLight)
 				{
 					resetMats.push_back(std::make_pair(reinterpret_cast<unsigned int *>(&xdata.taxiSignMaterial->surfaceProps.ambient), *reinterpret_cast<unsigned int *>(&xdata.taxiSignMaterial->surfaceProps.ambient)));
 					xdata.taxiSignMaterial->surfaceProps.ambient = 10.0f;
@@ -1265,7 +1265,7 @@ public:
 			}
 
 
-			if (vehicle->m_nVehicleFlags.bEngineOn)
+			if (vehicle->bEngineOn)
 			{
 				// Process gear
 				if (!xdata.gearFrame.empty()) ProcessRotatePart(vehicle, xdata.gearFrame, true);
@@ -1282,7 +1282,7 @@ public:
 			// Process brake pedal
 			if (!xdata.brakepedalFrame.empty()) ProcessPedal(vehicle, xdata.brakepedalFrame, 2);
 
-			if (vehicle->m_fHealth > 0 && !vehicle->m_nVehicleFlags.bEngineBroken && !vehicle->m_nVehicleFlags.bIsDrowning)
+			if (vehicle->m_fHealth > 0 && !vehicle->bEngineBroken && !vehicle->bIsDrowning)
 			{
 				// Process anims
 				if (!xdata.anims.empty()) ProcessAnims(vehicle, xdata.anims);
@@ -1956,7 +1956,7 @@ public:
 						reinterpret_cast<CAutomobile*>(vehicle)->m_swingingChassis.m_nDoorState = eDoorState::DOOR_NOTHING;
 						CVisibilityPlugins::SetFrameHierarchyId(frame, 1);
 						// some peoples uses 'body' instead of 'chassis' to disable it without changing the handling flag
-						vehicle->m_pHandlingData->m_nHandlingFlags.m_bSwingingChassis = false;
+						vehicle->m_pHandlingData->m_bSwingingChassis = false;
 						vehicle->m_nHandlingFlags.bSwingingChassis = false;
 						if (useLog) lg << "Error fixed: Using '" << name << "' as chassis for vehicle id " << vehicle->m_nModelIndex << "\n";
 						noChassis = false;

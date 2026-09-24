@@ -17,8 +17,8 @@ float GetVehicleSpeedRealistic(CVehicle * vehicle)
 	if (vehicle->m_nVehicleSubClass == VEHICLE_BIKE || vehicle->m_nVehicleSubClass == VEHICLE_BMX)
 	{
 		CBike * bike = (CBike *)vehicle;
-		wheelSpeed = ((bike->m_fWheelSpeed[0] * vehicleModelInfo->m_fWheelSizeFront) +
-			(bike->m_fWheelSpeed[1] * vehicleModelInfo->m_fWheelSizeRear)) / 2.0f;
+		wheelSpeed = ((bike->m_aWheelAngularVelocity[0] * vehicleModelInfo->m_fWheelSizeFront) +
+			(bike->m_aWheelAngularVelocity[1] * vehicleModelInfo->m_fWheelSizeRear)) / 2.0f;
 	}
 	else if (vehicle->m_nVehicleSubClass == VEHICLE_AUTOMOBILE || vehicle->m_nVehicleSubClass == VEHICLE_MTRUCK || vehicle->m_nVehicleSubClass == VEHICLE_QUAD)
 	{
@@ -38,7 +38,7 @@ float GetVehicleSpeedRealistic(CVehicle * vehicle)
 
 int GetDefaultLodForInteriorMinor(CVehicle *vehicle) {
 	int setLod = -2;
-	if (vehicle->m_nVehicleFlags.bIsBig || vehicle->m_nVehicleFlags.bIsBus || vehicle->m_nVehicleSubClass == VEHICLE_PLANE || vehicle->m_nVehicleSubClass == VEHICLE_HELI)
+	if (vehicle->bIsBig || vehicle->bIsBus || vehicle->m_nVehicleSubClass == VEHICLE_PLANE || vehicle->m_nVehicleSubClass == VEHICLE_HELI)
 	{
 		setLod = -9;
 	}
