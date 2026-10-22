@@ -119,6 +119,7 @@ ME_GetExhaustData pME_GetExhaustData = nullptr;
 
 // Ini settings
 bool useLog = true;
+int iniSampMode = 0;
 float iniDefaultDirtMult = 1.0f;
 float iniDefaultSteerAngle = 100.0f;
 bool iniLogNoTextureFound = false;
@@ -180,6 +181,7 @@ public:
 			iniShowCrashInfos = ini.ReadInteger("Test", "ShowCrashInfos", 0);
 			iniDefaultDirtMult = ini.ReadFloat("Settings", "DefaultDirtMult", 1.0f);
 			iniDefaultSteerAngle = ini.ReadFloat("Settings", "DefaultSteerAngle", 100.0f);
+			iniSampMode = ini.ReadInteger("Settings", "SampMode", 0);
 			if (ini.ReadInteger("Settings", "NoSwingingChassis", 0) == 1)
 			{
 				MakeInline<0x006AC104, 0x006AC104 + 7>([](reg_pack& regs)
@@ -414,7 +416,16 @@ public:
 
 			srand(time(0));
 			StoreHandlingData();
-			ApplyGSX(); 
+
+			bool isSamp = (iniSampMode == 1) || (GetModuleHandleA("samp.dll") != nullptr);
+			if (!isSamp)
+			{
+				ApplyGSX();
+			}
+			else
+			{
+				if (useLog) lg << "SA-MP Mode enabled: GSX garage save features disabled.\n";
+			} 
 			//ApplyCheckRepair();
 			
 			AtomicAlphaCallBack = ReadMemory<int>(0x4C7842, false);
